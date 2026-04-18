@@ -29,10 +29,17 @@ function getAuth() {
   }
 }
 
+const CACHE_TTL_MS = 5 * 60 * 1000;
+const cache = new Map<string, { at: number; events: CalendarEvent[] }>();
+
 export async function getCalendarEvents(
   fromIso: string,
   toIso: string,
 ): Promise<CalendarEvent[]> {
+  const cacheKey = `${fromIso}:${toIso}`;
+  const cached = cache.get(cacheKey);
+  if (cached && Date.now() - cached.at < CACHE_TTL_MS) return cached.events;
+
   const auth = getAuth();
   if (!auth) return [];
 
@@ -90,6 +97,7 @@ export async function getCalendarEvents(
       })
       .filter((e): e is CalendarEvent => e !== null);
 
+    cache.set(cacheKey, { at: Date.now(), events });
     return events;
   } catch (err) {
     console.warn("[google-calendar] fetch failed:", err);

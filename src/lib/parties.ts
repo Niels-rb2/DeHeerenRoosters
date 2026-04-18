@@ -17,10 +17,17 @@ export type PartyDisplay = {
   guest_count: number | null;
 };
 
+const CACHE_TTL_MS = 2 * 60 * 1000;
+const cache = new Map<string, { at: number; parties: PartyDisplay[] }>();
+
 export async function getPartiesInRange(
   fromIso: string,
   toIso: string,
 ): Promise<PartyDisplay[]> {
+  const cacheKey = `${fromIso}:${toIso}`;
+  const cached = cache.get(cacheKey);
+  if (cached && Date.now() - cached.at < CACHE_TTL_MS) return cached.parties;
+
   const { data } = await supabaseAdmin()
     .from("private_event_requests")
     .select("id, sender_name, occasion_type, event_date, start_time, end_time, guest_count, status")
@@ -29,7 +36,7 @@ export async function getPartiesInRange(
     .in("status", RELEVANT_STATUSES)
     .returns<PrivateEventRequest[]>();
 
-  return (data ?? [])
+  const parties = (data ?? [])
     .filter((p) => p.event_date)
     .map((p) => ({
       id: p.id,
@@ -40,4 +47,7 @@ export async function getPartiesInRange(
       end_time: p.end_time,
       guest_count: p.guest_count,
     }));
+
+  cache.set(cacheKey, { at: Date.now(), parties });
+  return parties;
 }
