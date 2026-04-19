@@ -9,7 +9,9 @@ import {
   Settings,
   LogOut,
   Home,
+  LayoutGrid,
 } from "lucide-react";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 type Item = {
   href: string;
@@ -81,19 +83,29 @@ export function AdminNav({
 
         <div className="mt-6 border-t border-[color:var(--clr-border)] pt-4">
           {userName ? (
-            <p className="px-3 text-xs text-[color:var(--clr-text-muted)]">
-              Ingelogd als <span className="text-[color:var(--clr-text)]">{userName}</span>
-            </p>
+            <p className="px-3 text-sm text-[color:var(--clr-text)]">{userName}</p>
           ) : null}
-          <form action="/api/auth/signout" method="post" className="mt-2">
-            <button
-              type="submit"
-              className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm text-[color:var(--clr-text-muted)] hover:bg-[color:var(--clr-surface-2)] hover:text-[color:var(--clr-text)]"
+          <div className="mt-3 flex items-center gap-2 px-2">
+            <a
+              href="https://bijcafedeheeren.nl"
+              aria-label="De Heeren Portal"
+              data-tooltip="De Heeren Portal"
+              className="h-10 w-10 rounded-full inline-flex items-center justify-center text-[color:var(--clr-text-muted)] hover:bg-[color:var(--clr-surface-2)] hover:text-[color:var(--clr-text)] transition-colors"
             >
-              <LogOut className="h-4 w-4" />
-              Uitloggen
-            </button>
-          </form>
+              <LayoutGrid className="h-4 w-4" />
+            </a>
+            <ThemeToggle />
+            <form action="/api/auth/signout" method="post">
+              <button
+                type="submit"
+                aria-label="Uitloggen"
+                data-tooltip="Uitloggen"
+                className="h-10 w-10 rounded-full inline-flex items-center justify-center text-[color:var(--clr-text-muted)] hover:bg-[color:var(--clr-surface-2)] hover:text-[color:var(--clr-text)] transition-colors"
+              >
+                <LogOut className="h-4 w-4" />
+              </button>
+            </form>
+          </div>
         </div>
       </aside>
 
