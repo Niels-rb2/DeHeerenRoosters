@@ -11,22 +11,14 @@ export type CalendarEvent = {
 };
 
 function getAuth() {
-  const raw = process.env.GOOGLE_CALENDAR_SA_JSON;
-  if (!raw) return null;
-  try {
-    // Accepteer zowel pure JSON als base64-gecodeerd.
-    const json = raw.trim().startsWith("{")
-      ? JSON.parse(raw)
-      : JSON.parse(Buffer.from(raw, "base64").toString("utf8"));
-    return new google.auth.JWT({
-      email: json.client_email,
-      key: json.private_key,
-      scopes: ["https://www.googleapis.com/auth/calendar.readonly"],
-      subject: process.env.GOOGLE_CALENDAR_SUBJECT || undefined,
-    });
-  } catch {
-    return null;
-  }
+  const clientId = process.env.GOOGLE_CLIENT_ID;
+  const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+  const refreshToken = process.env.GOOGLE_CALENDAR_REFRESH_TOKEN;
+  if (!clientId || !clientSecret || !refreshToken) return null;
+
+  const oauth2 = new google.auth.OAuth2(clientId, clientSecret);
+  oauth2.setCredentials({ refresh_token: refreshToken });
+  return oauth2;
 }
 
 const CACHE_TTL_MS = 5 * 60 * 1000;

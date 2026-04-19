@@ -11,7 +11,7 @@ export default async function InstellingenPage() {
     .order("keyword", { ascending: true })
     .returns<EventKeyword[]>();
 
-  const calendarConnected = !!process.env.GOOGLE_CALENDAR_SA_JSON;
+  const calendarConnected = !!process.env.GOOGLE_CALENDAR_REFRESH_TOKEN;
 
   return (
     <main className="mx-auto max-w-5xl px-5 md:px-10 py-8 md:py-12 space-y-12">
@@ -31,7 +31,7 @@ export default async function InstellingenPage() {
         {!calendarConnected ? (
           <div className="mt-4 rounded-xl bg-[color:var(--clr-warning)]/15 text-[color:var(--clr-warning)] px-4 py-3 text-sm">
             Google Agenda is nog niet gekoppeld. Zet{" "}
-            <code className="font-mono text-xs">GOOGLE_CALENDAR_SA_JSON</code>{" "}
+            <code className="font-mono text-xs">GOOGLE_CALENDAR_REFRESH_TOKEN</code>{" "}
             in de env vars om evenementen op te halen.
           </div>
         ) : null}
