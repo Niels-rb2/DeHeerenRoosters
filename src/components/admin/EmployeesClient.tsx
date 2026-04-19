@@ -115,7 +115,8 @@ export function EmployeesClient({
                   <button
                     onClick={() => setPatternFor(emp)}
                     className="btn-ghost inline-flex items-center gap-2"
-                    title="Vast weekpatroon bewerken"
+                    aria-label="Vast weekpatroon bewerken"
+                    data-tooltip="Vast weekpatroon bewerken"
                   >
                     <Calendar className="h-4 w-4" />
                     Patroon
@@ -123,14 +124,16 @@ export function EmployeesClient({
                   <button
                     onClick={() => setEditing(emp)}
                     className="btn-ghost p-2"
-                    title="Gegevens bewerken"
+                    aria-label="Gegevens bewerken"
+                    data-tooltip="Gegevens bewerken"
                   >
                     <Pencil className="h-4 w-4" />
                   </button>
                   <button
                     onClick={() => toggleActive(emp)}
                     className="btn-ghost p-2"
-                    title={emp.is_active ? "Deactiveren" : "Heractiveren"}
+                    aria-label={emp.is_active ? "Deactiveren" : "Heractiveren"}
+                    data-tooltip={emp.is_active ? "Deactiveren" : "Heractiveren"}
                   >
                     {emp.is_active ? (
                       <UserX className="h-4 w-4" />
